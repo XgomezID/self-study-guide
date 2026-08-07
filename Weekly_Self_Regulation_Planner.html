@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weekly Self-Regulation Planner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#F6F5F1;
+    --ink:#22303A;
+    --ink-soft:#516170;
+    --accent:#1F4E5C;
+    --accent-tint:#E7EFEE;
+    --line:#D9D5CB;
+    --gold:#A97444;
+    --gold-tint:#F1E6D9;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',-apple-system,Segoe UI,sans-serif;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .sheet{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 56px 64px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex;
+    justify-content:flex-end;
+    max-width:760px;
+    margin:0 auto;
+    padding:20px 56px 0;
+  }
+  .print-btn{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.02em;
+    color:#fff;
+    background:var(--accent);
+    border:none;
+    border-radius:3px;
+    padding:9px 18px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .print-btn:hover{background:#173c47;}
+  .print-btn svg{width:14px;height:14px;fill:#fff;}
+
+  header.hero{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    border-bottom:2px solid var(--accent);
+    padding-bottom:22px;
+    margin-bottom:26px;
+  }
+  .loop-mark{flex-shrink:0;}
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:30px;
+    line-height:1.15;
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  .kicker{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:15px;
+    color:var(--accent);
+    margin:0;
+  }
+
+  /* ---------- Intro ---------- */
+  .intro p{
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+  }
+
+  /* ---------- Phase cycle strip ---------- */
+  .cycle{
+    display:flex;
+    gap:10px;
+    margin:22px 0 30px;
+  }
+  .cycle .node{
+    flex:1;
+    background:var(--accent-tint);
+    border-left:3px solid var(--accent);
+    padding:12px 14px;
+    border-radius:2px;
+  }
+  .cycle .node .tag{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:13.5px;
+    color:var(--accent);
+    display:block;
+    margin-bottom:3px;
+  }
+  .cycle .node .desc{
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.4;
+  }
+
+  /* ---------- Week field ---------- */
+  .week-field{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:0 0 30px;
+    font-family:'Fraunces',serif;
+  }
+  .week-field label{
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .week-field .fill{
+    flex:1;
+    min-width:160px;
+    border:none;
+    border-bottom:1.4px solid var(--ink);
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    padding:2px 4px 4px;
+    outline:none;
+  }
+  .week-field .fill:empty:before{content:attr(data-placeholder);color:#9aa4ab;}
+
+  /* ---------- Section blocks ---------- */
+  .phase{
+    margin-bottom:34px;
+    break-inside:avoid;
+  }
+  .phase-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .phase-num{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:13px;
+    color:#fff;
+    background:var(--accent);
+    width:22px;height:22px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .phase-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--ink);
+    margin:0;
+  }
+  .phase-sub{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 16px 32px;
+    font-style:italic;
+  }
+
+  .qblock{
+    margin:0 0 16px 32px;
+  }
+  .qblock .q{
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--ink);
+    margin-bottom:6px;
+    display:block;
+  }
+  .answer{
+    min-height:46px;
+    border:none;
+    border-bottom:1px solid var(--line);
+    background:transparent;
+    padding:4px 2px 8px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.6;
+    outline:none;
+  }
+  .answer:focus{border-bottom:1px solid var(--accent);}
+  .answer:empty:before{content:attr(data-placeholder);color:#9aa4ab;font-style:italic;}
+
+  /* end-of-week highlight strip */
+  .keep-change{
+    display:flex;
+    gap:14px;
+    margin-left:32px;
+  }
+  .keep-change .col{
+    flex:1;
+    background:var(--gold-tint);
+    border-radius:3px;
+    padding:12px 14px;
+  }
+  .keep-change .col .label{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:12.5px;
+    color:var(--gold);
+    display:block;
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .keep-change .answer{border-bottom:1px solid #E0CDB4;}
+  .keep-change .answer:focus{border-bottom:1px solid var(--gold);}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding-top:14px;
+    margin-top:20px;
+  }
+  footer p{
+    font-size:11px;
+    color:#8b8f8f;
+    line-height:1.5;
+    font-style:italic;
+    margin:0;
+  }
+
+  @media print{
+    .no-print{display:none !important;}
+    body{background:#fff;}
+    .sheet{padding:20px 10px 30px;max-width:100%;}
+    .answer, .fill{-webkit-print-color-adjust:exact;}
+  }
+
+  @page{margin:0.6in;}
+</style>
+</head>
+<body>
+
+  <div class="topbar no-print">
+    <button class="print-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      Print / Save as PDF
+    </button>
+  </div>
+
+  <div class="sheet">
+
+    <header class="hero">
+      <svg class="loop-mark" width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="27" fill="none" stroke="#D9D5CB" stroke-width="1.5"/>
+        <path d="M32 8 A24 24 0 0 1 54 24" fill="none" stroke="#1F4E5C" stroke-width="3" stroke-linecap="round"/>
+        <path d="M54 24 A24 24 0 0 1 42 53" fill="none" stroke="#1F4E5C" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+        <path d="M42 53 A24 24 0 0 1 32 8" fill="none" stroke="#A97444" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+        <circle cx="32" cy="8" r="3.4" fill="#1F4E5C"/>
+        <circle cx="54" cy="24" r="3.4" fill="#1F4E5C"/>
+        <circle cx="42" cy="53" r="3.4" fill="#A97444"/>
+      </svg>
+      <div>
+        <p class="kicker">Online Time Management Strategy Guide</p>
+        <h1>Weekly Self-Regulation Planner</h1>
+      </div>
+    </header>
+
+    <div class="intro">
+      <p>In this module, you learned about tips and strategies to succeed in an online program, from managing your time and study habits, to engaging thoughtfully in discussions, to navigating group work, all while balancing the competing obligations and life experiences you bring into your coursework. Those strategies work best when they're not just a checklist you follow once, but a habit you build and adjust over time. That's where this worksheet comes in.</p>
+      <p>It's built around a well-known framework in educational psychology called self-regulated learning, developed by researcher Barry Zimmerman. Learning isn't just something that happens to you during a lecture or a reading. It's something you actively manage, especially when you're studying on your own schedule. Zimmerman's model breaks that management process into three phases that repeat in a loop, week after week.</p>
+    </div>
+
+    <div class="cycle">
+      <div class="node">
+        <span class="tag">1. Forethought</span>
+        <span class="desc">Before you start: set a goal and plan your approach.</span>
+      </div>
+      <div class="node">
+        <span class="tag">2. Performance</span>
+        <span class="desc">While you work: monitor focus and adjust as needed.</span>
+      </div>
+      <div class="node">
+        <span class="tag">3. Self-Reflection</span>
+        <span class="desc">After you finish: evaluate, and carry it forward.</span>
+      </div>
+    </div>
+
+    <div class="week-field">
+      <label>Week of</label>
+      <div class="fill" contenteditable="true" data-placeholder="type a date..."></div>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-num">1</span>
+        <h2 class="phase-title">Forethought</h2>
+      </div>
+      <p class="phase-sub">Before the week starts</p>
+
+      <div class="qblock">
+        <span class="q">What's my specific goal for this week? (Not just "finish the module.")</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+      </div>
+      <div class="qblock">
+        <span class="q">When, specifically, will I work on it? (Days / times)</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+      </div>
+      <div class="qblock">
+        <span class="q">What's the hardest or most unfamiliar part, and what's my plan for it?</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-num">2</span>
+        <h2 class="phase-title">Performance</h2>
+      </div>
+      <p class="phase-sub">During the week</p>
+
+      <div class="qblock">
+        <span class="q">What might distract or derail me this week, and how will I handle it?</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+      </div>
+      <div class="qblock">
+        <span class="q">What's my signal that I need to stop and ask for help instead of pushing through?</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-num">3</span>
+        <h2 class="phase-title">Self-Reflection</h2>
+      </div>
+      <p class="phase-sub">End of the week</p>
+
+      <div class="qblock">
+        <span class="q">Did I meet the goal I set? Why or why not?</span>
+        <div class="answer" contenteditable="true" data-placeholder="type your answer..." style="min-height:56px;"></div>
+      </div>
+
+      <div class="keep-change">
+        <div class="col">
+          <span class="label">Keep doing</span>
+          <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+        </div>
+        <div class="col">
+          <span class="label">Change</span>
+          <div class="answer" contenteditable="true" data-placeholder="type your answer..."></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Note: Zimmerman's self-regulated learning model is a well-established framework in educational psychology (Zimmerman, 1989, 2002, and later work). Fill this worksheet out directly in your browser, then use Print / Save as PDF to keep or submit a copy.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
